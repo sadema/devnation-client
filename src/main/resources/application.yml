@@ -1,0 +1,33 @@
+server:
+  port: 7001
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          devnation:
+            client-id: devnation-client
+            client-secret: 416ec01b-ab89-4b8d-895a-367b480f096e
+#            redirect-uri: http://localhost:7001/callback
+        provider:
+          devnation:
+            issuer-uri: http://localhost:8080/auth/realms/demo
+logging:
+  level:
+    root: info
+    sun:
+      rmi: info
+      net:
+        www:
+          protocol:
+            http: debug
+    nl:
+      edsn:
+        prototype:
+          devnationclient: debug
+    org:
+      springframework:
+        web:
+          client: debug
+      apache:
+        http: debug
