@@ -1,16 +1,14 @@
 package nl.edsn.prototype.devnationclient;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpRequest;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,20 +16,14 @@ public class LoginController {
 
     @GetMapping("/login")
     public RedirectView redirect(@RequestParam MultiValueMap<String, String> parameters, HttpServletRequest request) {
-        String uri = parameters.get("uri").get(0);
-        log.debug("URI: " + uri);
-        if (request != null) {
-            log.debug("=================SessionId: " + request.getSession().getId());
-            request.getSession().setAttribute("uri", uri);
+        List<String> uris = parameters.get("uri");
+        if (request != null && uris != null) {
+            log.debug("SessionId: " + request.getSession().getId() + " " + "uri: " + uris.get(0));
+            request.getSession().setAttribute("uri", uris.get(0));
+            return new RedirectView("/oauth2/authorization/devnation");
         }
-        return new RedirectView("/oauth2/authorization/devnation");
+        throw new IllegalStateException("Invalid request or no uri request parameter");
     }
-
-//    @GetMapping("/callback")
-//    public RedirectView callback(HttpServletRequest request) {
-////        return "{ \"text\" : \"callback\" }";
-//        return new RedirectView("http://localhost:7005/api/message");
-//    }
 
     @GetMapping("/")
     public RedirectView callback(HttpServletRequest request) {
@@ -39,6 +31,6 @@ public class LoginController {
         if (uri != null) {
             log.debug("URI: " + uri);
         }
-        return new RedirectView(uri);
+        return new RedirectView("http://localhost:7005");
     }
 }

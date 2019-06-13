@@ -1,5 +1,7 @@
 server:
   port: 7001
+  session:
+    tracking-modes: cookie
 spring:
   security:
     oauth2:
